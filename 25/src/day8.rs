@@ -62,7 +62,6 @@ fn solve_part1(pairs: &[(usize, usize)], len: usize) -> usize {
         .enumerate()
         .map(|(a, _)| a)
         .collect::<Vec<usize>>();
-    let len = parents.len();
     let mut size = vec![1; len];
 
     for (x, y) in pairs.iter().take(1000) {
@@ -82,7 +81,6 @@ fn solve_part2(
         .enumerate()
         .map(|(a, _)| a)
         .collect::<Vec<usize>>();
-    let len = coords.len();
     let mut size = vec![1; len];
 
     for (x, y) in pairs.iter() {
@@ -98,9 +96,8 @@ fn find_parent(parents: &mut [usize], x: usize) -> usize {
     if parents[x] == x {
         x
     } else {
-        let val = find_parent(parents, parents[x]);
-        parents[x] = val;
-        val
+        parents[x] = find_parent(parents, parents[x]);
+        parents[x]
     }
 }
 
@@ -110,8 +107,7 @@ fn merge_sets(
     x: usize,
     y: usize,
 ) -> usize {
-    let a = find_parent(parents, x);
-    let b = find_parent(parents, y);
+    let (a, b) = (find_parent(parents, x), find_parent(parents, y));
     if a != b {
         size[a] += size[b];
         // Don't want stale values since we already merged these two sets!
